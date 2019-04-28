@@ -3,7 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OM.WebUI", "OM.WebUI\OM.WebUI.csproj", "{2ABD1A33-975B-4CB8-816E-7790F85729C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OM.Entities", "OM.Entities\OM.Entities.csproj", "{24A61BB6-B8D8-48BD-90D5-2A24B6EBB650}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OM.Database", "OM.Database\OM.Database.csproj", "{701ECFFA-CFCF-4854-A733-547E68F97906}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2ABD1A33-975B-4CB8-816E-7790F85729C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ABD1A33-975B-4CB8-816E-7790F85729C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ABD1A33-975B-4CB8-816E-7790F85729C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ABD1A33-975B-4CB8-816E-7790F85729C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24A61BB6-B8D8-48BD-90D5-2A24B6EBB650}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24A61BB6-B8D8-48BD-90D5-2A24B6EBB650}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24A61BB6-B8D8-48BD-90D5-2A24B6EBB650}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24A61BB6-B8D8-48BD-90D5-2A24B6EBB650}.Release|Any CPU.Build.0 = Release|Any CPU
+		{701ECFFA-CFCF-4854-A733-547E68F97906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{701ECFFA-CFCF-4854-A733-547E68F97906}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{701ECFFA-CFCF-4854-A733-547E68F97906}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{701ECFFA-CFCF-4854-A733-547E68F97906}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
