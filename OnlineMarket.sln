@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OM.Entities", "OM.Entities\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OM.Database", "OM.Database\OM.Database.csproj", "{701ECFFA-CFCF-4854-A733-547E68F97906}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OM.Services", "OM.Services\OM.Services.csproj", "{FC95B318-3E0A-4ED0-A80B-C6B8B236BFC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{701ECFFA-CFCF-4854-A733-547E68F97906}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{701ECFFA-CFCF-4854-A733-547E68F97906}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{701ECFFA-CFCF-4854-A733-547E68F97906}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC95B318-3E0A-4ED0-A80B-C6B8B236BFC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC95B318-3E0A-4ED0-A80B-C6B8B236BFC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC95B318-3E0A-4ED0-A80B-C6B8B236BFC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC95B318-3E0A-4ED0-A80B-C6B8B236BFC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

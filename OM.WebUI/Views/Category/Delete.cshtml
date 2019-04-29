@@ -1,0 +1,26 @@
+﻿@model OM.Entities.EntityClass.Category
+
+@{
+    ViewBag.Title = "Sil";
+}
+
+<h2>Kategori Sil</h2>
+
+<h3>Bu kategoriyi silmeye emin misiniz ?</h3>
+<form method="post">
+
+    <input type="hidden" value="@Model.Id" />
+
+    <label>Adı :</label>
+    <input name="Adı" value="@Model.Name" />
+
+    <br />
+
+    <label>Açıklama :</label>
+    <input name="Açıklama" value="@Model.Description" />
+
+    <br />
+    <button type="submit">Sil</button>
+</form>
+
+<a href="/Index">İşlemi İptal Et</a>

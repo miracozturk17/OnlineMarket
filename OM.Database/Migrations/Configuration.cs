@@ -2,14 +2,14 @@ namespace OM.Database.Migrations
 {
     using System.Data.Entity.Migrations;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<OM.Database.Context.OMContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Context.OMContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(OM.Database.Context.OMContext context)
+        protected override void Seed(Context.OMContext context)
         {
             //  This method will be called after migrating to the latest version.
 

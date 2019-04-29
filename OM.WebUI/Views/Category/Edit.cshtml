@@ -1,0 +1,23 @@
+﻿@model OM.Entities.EntityClass.Category
+
+@{
+    ViewBag.Title = "Düzenle";
+}
+
+<h2>Kategori Düzenle</h2>
+
+<form method="post">
+    
+    <input type="hidden" value="@Model.Id"/>
+
+    <label>Adı :</label>
+    <input name="Adı" value="@Model.Name"/>
+
+    <br/>
+
+    <label>Açıklama :</label>
+    <input name="Açıklama" value="@Model.Description"/>
+
+    <br/>
+    <button type="submit">Kaydet</button>
+</form>
