@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+@{
+    #region AramaButonu
+    //< div >
+    //<
+    //form method = "post"
+    //        action = "/Product/ProductTable" >
+    //<
+    //input name = "Arama"
+    //        id = "aramametni" / >
+    //<
+    //button name = "Ara"
+    //        type = "button"
+    //        id = "aramabutonu" > Ara </
+    //button >
+    //</
+    //form >
+    //<
+    //button name = "Yeni"
+    //        type = "button"
+    //        id = "yenibutonu" > Yeni </
+    //button >
+    //</
+    //div >
+    #endregion
+}
+
+
+<div id="tablo">
+    @{
+
+        Html.RenderAction("ProductTable");
+
+        /*
+        * Html.RenderAction("Create");
+        * Parçalı olarak sayfa düzenini doğrudan oluşturmak için bu yöntem üzerinden ilerleyebiliriz..
+        */
+
+    }
+</div>
+
+@{
+    #region AramaButonuScript
+
+    //< script >
+    //                          $("#aramabutonu").click(function() {
+    //        var arama = $("#aramametni").val();
+
+    //          $.ajax({
+    //        url: '/Product/ProductTable',
+    //          data:
+    //     {
+    //       aramametnicontroller: arama
+    //    }
+    // })
+    //       .done(function(response) {
+    //         $("#tablo").html(response);
+    // })
+    //       .fail(function(XMLHttpRequest, textStatus, errorThrown) {
+
+    // });
+    // });
+    //</script>
+
+    #endregion
+}

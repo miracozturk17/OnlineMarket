@@ -1,0 +1,62 @@
+﻿@using OM.Entities.EntityClass
+@model  List<Product>
+@{
+    ViewBag.Title = "ProductTable";
+}
+
+<div>
+    <form method="post" action="/Product/ProductTable">
+        <input name="Arama" id="aramametni" />
+        <button name="Ara" type="button" id="aramabutonu">Ara</button>
+    </form>
+    <button name="Yeni" type="button" id="yenibutonu">Yeni</button>
+</div>
+
+<h2>Ürün Tablosu</h2>
+<div id="tablo">
+    <table>
+        <thead>
+            <tr>
+                <td>Ürün Adı</td>
+                <td>Kategori</td>
+                <td>Fiyat</td>
+                <td>Açıklama</td>
+                <td>Eylem</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var urun in Model)
+            {
+                <tr>
+                    <td>@urun.Name</td>
+                    <td>@urun.Category.Name</td>
+                    <td>@urun.UnitePrice</td>
+                    <td>@urun.Description</td>
+                    <td>
+                        <button class="active">Düzenle</button>
+                        <button class="alert-danger">Sil</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $("#aramabutonu").click(function () {
+        var arama = $("#aramametni").val();
+
+        $.ajax({
+            url: '/Product/ProductTable',
+            data: {
+                aramametnicontroller: arama
+            }
+        })
+            .done(function (response) {
+                $("#tablo").html(response);
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+
+            });
+    });
+</script>

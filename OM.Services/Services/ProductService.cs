@@ -6,53 +6,53 @@ using OM.Entities.EntityClass;
 
 namespace OM.Services.Services
 {
-    public abstract class CategoryService
+    public abstract class ProductService
     {
-        public void CategorySave(Category category)
+        public void ProductSave(Product product)
         {
             using (var context = new OMContext())
             {
-                context.Categories.Add(category);
+                context.Products.Add(product);
 
                 context.SaveChanges();
             }
         }
 
-        public List<Category> CategoryList()
+        public List<Product> ProductList()
         {
             using (var context = new OMContext())
             {
-                return context.Categories.ToList();
+                return context.Products.ToList();
             }
         }
 
-        public Category GetCategory(int id)
+        public Product GetProduct(int id)
         {
             using (var context = new OMContext())
             {
-                return context.Categories.Find(id);
+                return context.Products.Find(id);
             }
         }
 
-        public void UpdateCategory(Category category)
+        public void UpdateProduct(Product product)
         {
             using (var context = new OMContext())
             {
                 //context.Categories.AddOrUpdate(category);
 
-                context.Entry(category).State = System.Data.Entity.EntityState.Modified;
+                context.Entry(product).State = System.Data.Entity.EntityState.Modified;
 
                 context.SaveChanges();
             }
         }
 
-        public void DeleteCategory(int id)
+        public void DeleteProduct(int id)
         {
             using (var context = new OMContext())
             {
-                var category = context.Categories.Find(id);
+                var product = context.Products.Find(id);
 
-                context.Categories.Remove(category ?? throw new InvalidOperationException());
+                context.Products.Remove(product ?? throw new InvalidOperationException());
 
                 context.SaveChanges();
             }
