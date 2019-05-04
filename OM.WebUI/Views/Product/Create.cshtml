@@ -5,7 +5,7 @@
 
 <h2>Ürün Oluştur</h2>
 
-<form method="post">
+<form id="createProduct">
 
     <label>Adı :</label>
     <input name="Adı" />
@@ -23,6 +23,27 @@
 
     <br />
 
-    <button type="submit">Kaydet</button>
+    <button type="button" id="saveButton">Kaydet</button>
 </form>
 
+<script>
+    $("#saveButton").click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '/Product/Create',
+            data: $("#createProduct").serialize()
+            //data: {
+            //    Name: searchValue,
+            //    Description: '',
+            //    Price:''
+            //}
+        })
+            .done(function (response) {
+                $("#table").html(response);
+                $("#actionTable").html("");
+            })
+            .fail(function (xmlHttpRequest, textStatus, errorThrown) {
+                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
+            });
+    });
+</script>

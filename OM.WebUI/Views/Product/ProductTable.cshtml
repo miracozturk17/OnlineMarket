@@ -6,14 +6,14 @@
 
 <div>
     <form method="post" action="/Product/ProductTable">
-        <input name="Arama" id="aramametni" />
-        <button name="Ara" type="button" id="aramabutonu">Ara</button>
+        <input name="Arama" id="searchText" />
+        <button name="Ara" type="button" id="searchButton">Ara</button>
     </form>
-    <button name="Yeni" type="button" id="yenibutonu">Yeni</button>
+    <button name="Yeni" type="button" id="newButton">Yeni</button>
 </div>
 
 <h2>Ürün Tablosu</h2>
-<div id="tablo">
+<div id="table">
     <table>
         <thead>
             <tr>
@@ -33,8 +33,8 @@
                     <td>@urun.UnitePrice</td>
                     <td>@urun.Description</td>
                     <td>
-                        <button class="active">Düzenle</button>
-                        <button class="alert-danger">Sil</button>
+                        <button class="btn-info" id="editButton" data-id="@urun.Id">Düzenle</button>
+                        <button class="btn-danger" id="deleteButton" data-id="@urun.Id">Sil</button>
                     </td>
                 </tr>
             }
@@ -43,20 +43,68 @@
 </div>
 
 <script>
-    $("#aramabutonu").click(function () {
-        var arama = $("#aramametni").val();
+    $("#searchButton").click(function () {
+        var search = $("#searchText").val();
 
         $.ajax({
             url: '/Product/ProductTable',
             data: {
-                aramametnicontroller: arama
+                searchtextcontroller: search
             }
         })
             .done(function (response) {
-                $("#tablo").html(response);
+                $("#table").html(response);
             })
             .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-
+                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
             });
     });
+
+    $("#newButton").click(function () {
+        $.ajax({
+            url: '/Product/Create'
+        })
+            .done(function (response) {
+                $("#actionTable").html(response);
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
+            });
+    });
+
+    $("#editButton").click(function () {
+        // debugger; JavaScript Debug
+        $.ajax({
+            url: '/Product/Edit',
+            data: {
+                Id: $(this).attr('data-id')
+            }
+        })
+            .done(function (response) {
+                $("#actionTable").html(response);
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
+            });
+    });
+
+    $("#deleteButton").click(function () {
+
+        var confirmDelete = confirm("Ürünü silmek istediğinize emin misiniz ?");
+
+        if (confirmDelete) {
+            $.ajax({
+                type: 'POST',
+                url: '/Product/Delete',
+                data: {
+                    Id: $(this).attr('data-id')
+                }
+            })
+                .done(function (response) {
+                    $("#table").html(response);
+                })
+                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
+                });
+        }});
 </script>

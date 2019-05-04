@@ -1,0 +1,51 @@
+﻿@model OM.Entities.EntityClass.Product
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Ürün Düzenle</h2>
+
+<form id="editProduct">
+
+    <input type="hidden" name="ID" value="@Model.Id" />
+
+    <label>Adı :</label>
+    <input name="Adı" value="@Model.Name" />
+
+    <br />
+
+    <label>Açıklama :</label>
+    <input name="Açıklama" value="@Model.Description" />
+
+    <br />
+
+
+    <label>Fiyat :</label>
+    <input name="Fiyat" value="@Model.UnitePrice" />
+
+    <br />
+
+    <button type="button" id="updateButton">Güncelle</button>
+</form>
+
+<script>
+    $("#updateButton").click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '/Product/Edit',
+            data: $("#editProduct").serialize()
+            //data: {
+            //    Name: searchValue,
+            //    Description: '',
+            //    Price:''
+            //}
+        })
+            .done(function (response) {
+                $("#table").html(response);
+                $("#actiontable").html("");
+            })
+            .fail(function (xmlHttpRequest, textStatus, errorThrown) {
+                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
+            });
+    });
+</script>
