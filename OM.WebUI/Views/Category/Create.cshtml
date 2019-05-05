@@ -8,13 +8,57 @@
 <form method="post">
 
     <label>Adı :</label>
-    <input name="Adı"/>
+    <input name="Adı" />
 
-    <br/>
+    <br />
 
     <label>Açıklama :</label>
-    <input name="Açıklama"/>
+    <input name="Açıklama" />
 
-    <br/>
+    <br />
+
+
+    <label>Fotoğraf :</label>
+    <input id="imageURL" name="FotografUzantisi" type="hidden"/>
+    <input name="Fotograf" type="file" accept=".png,.jpg" id="imageUpload" />
+    <img id="categoryImage"/>
+
+    <br />
     <button type="submit">Kaydet</button>
 </form>
+
+<script>
+    $('#imageUpload').change(function () {
+
+        var element = this;
+
+        var formData = new formData();
+
+        var totalFiles = element.files.length;
+
+        for (var i = 0; i < totalFiles; i++) {
+            var file = element.files[i];
+            formData.append("Photo", file);
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/Shared/UploadImage',
+            dataType: 'json',
+            data: formData,
+            contentType: false,
+            processData: false
+        })
+            .done(function (response) {
+
+                if (response.Success) {
+                    $("#categoryImage").attr("src", response.ImageURL);
+                    $("#ImageURL").val(response.ImageURL);
+                }
+            })
+            .fail(function (xmlHttpRequest, textStatus, errorThrown) {
+
+                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
+            });
+    });
+</script>

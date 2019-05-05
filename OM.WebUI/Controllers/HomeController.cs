@@ -1,26 +1,24 @@
 ﻿using System.Web.Mvc;
+using OM.Services.Services;
+using OM.WebUI.Models;
 
 namespace OM.WebUI.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly CategoryService _categoryService;
+
+        public HomeController(CategoryService categoryService)
+        {
+            _categoryService = categoryService;
+        }
+
         public ActionResult Index()
         {
-            return View();
-        }
+            HomeViewModel model = new HomeViewModel
+            { Categories = _categoryService.CategoryList() };
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+            return View(model);
+        } 
     }
 }
