@@ -1,4 +1,4 @@
-﻿
+﻿@model List<OM.Entities.EntityClass.Category>
 @{
     ViewBag.Title = "Create";
 }
@@ -6,25 +6,72 @@
 <h2>Ürün Oluştur</h2>
 
 <form id="createProduct">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label>Category</label>
+                <select class="form-control" name="CategoryID">
+                    @*@foreach (var category in Model.AvailableCategories)
+                        {
+                            <option value="@category.ID">@category.Name</option>
+                        }*@
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Adı</label>
+                <input class="form-control" name="Name" />
+            </div>
+            <div class="form-group">
+                <label>Açıklama</label>
+                <input class="form-control" name="Description" />
+            </div>
+            <div class="form-group">
+                <label>Fiyatı</label>
+                <input class="form-control" name="Price" />
+            </div>
+            <div class="form-group">
+                <label>Fotoğraf</label>
+                <input type="hidden" id="ImageURL" name="ImageURL" />
+                <input class="form-control" id="imageUpload" name="Image" type="file" accept=".png, .jpg" />
+            </div>
+            <button id="saveButton" type="button" class="btn btn-primary">Kaydet</button>
+            <button id="cancelBtn" type="button" class="btn btn-primary">İptal</button>
+        </div>
+        <div class="col-md-4">
+            @*<div class="thumb">
+                    <img class="img-thumbnail img-fluid" id="productImage" src="@imageURL" />
+                </div>*@
+        </div>
+    </div>
+</form>
+
+@*<label>Kategori</label>
+    <select name="CategoryId">
+        @foreach (var category in Model)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </select>
+    <br />
 
     <label>Adı :</label>
-    <input name="Adı" />
+    <input name="Name" />
 
     <br />
 
     <label>Açıklama :</label>
-    <input name="Açıklama" />
+    <input name="Description" />
 
     <br />
 
 
     <label>Fiyat :</label>
-    <input name="Fiyat" />
+    <input name="Price" />
 
     <br />
 
-    <button type="button" id="saveButton">Kaydet</button>
-</form>
+    <button type="button" id="saveButton">Kaydet</button>*@
+
 
 <script>
     $("#saveButton").click(function () {

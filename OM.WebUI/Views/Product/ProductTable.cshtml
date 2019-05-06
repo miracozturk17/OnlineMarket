@@ -29,7 +29,19 @@
             {
                 <tr>
                     <td>@urun.Name</td>
-                    <td>@urun.Category.Name</td>
+                    <td>
+                        @urun.Category.Name
+                        @{
+                            if (urun.Category != null)
+                            {
+                                <text> urun.Category.Name </text>
+                            }
+                            else
+                            {
+                                <text> - </text>
+                            }
+                        }
+                    </td>
                     <td>@urun.UnitePrice</td>
                     <td>@urun.Description</td>
                     <td>
@@ -106,5 +118,6 @@
                 .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                     alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
                 });
-        }});
+        }
+    });
 </script>

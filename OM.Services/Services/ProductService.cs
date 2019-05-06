@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using OM.Database.Context;
 using OM.Entities.EntityClass;
@@ -8,10 +9,24 @@ namespace OM.Services.Services
 {
     public abstract class ProductService
     {
+        private readonly OMContext _context;
+
+        protected ProductService(OMContext context)
+        {
+            _context = context;
+        }
+
+        /*
+         *contex yapısını ister var using{} mantıgı ile 
+         *ister constructer yöntemi ile kullan.
+         */
+
         public void ProductSave(Product product)
         {
             using (var context = new OMContext())
             {
+                context.Entry(product.Category).State = EntityState.Unchanged;
+
                 context.Products.Add(product);
 
                 context.SaveChanges();
@@ -20,10 +35,7 @@ namespace OM.Services.Services
 
         public List<Product> ProductList()
         {
-            using (var context = new OMContext())
-            {
-                return context.Products.ToList();
-            }
+            return _context.Products.Include(c => c.Category).ToList();
         }
 
         public Product GetProduct(int id)
@@ -40,7 +52,7 @@ namespace OM.Services.Services
             {
                 //context.Categories.AddOrUpdate(category);
 
-                context.Entry(product).State = System.Data.Entity.EntityState.Modified;
+                context.Entry(product).State = EntityState.Modified;
 
                 context.SaveChanges();
             }

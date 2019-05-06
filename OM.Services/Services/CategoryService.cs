@@ -8,6 +8,13 @@ namespace OM.Services.Services
 {
     public abstract class CategoryService
     {
+        private readonly OMContext _context;
+
+        protected CategoryService(OMContext context)
+        {
+            _context = context;
+        }
+
         public void CategorySave(Category category)
         {
             using (var context = new OMContext())

@@ -1,19 +1,21 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
-using Newtonsoft.Json;
 using OM.Entities.EntityClass;
 using OM.Services.Services;
+using OM.WebUI.Models;
 
 namespace OM.WebUI.Controllers
 {
     public class ProductController : Controller
     {
         private readonly ProductService _productService;
+        private readonly CategoryService _categoryService;
 
-        public ProductController(ProductService productService)
+
+        public ProductController(ProductService productService, CategoryService categoryService)
         {
             _productService = productService;
+            _categoryService = categoryService;
         }
 
         public ActionResult Index()
@@ -36,13 +38,29 @@ namespace OM.WebUI.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            return PartialView();
+            var categories = _categoryService.CategoryList();
+
+            return PartialView(categories);
         }
 
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(CategoryViewModel model)
         {
-            _productService.ProductSave(product);
+            /*
+             Service üzerinden de hareket edilebilir.
+            _productService.ProductSave(product); 
+            */
+
+            var newProduct = new Product
+            {
+                Name = model.Name,
+                Description = model.Description,
+                UnitePrice = model.Price,
+                //CategoryId = model.CategoryId
+                Category = _categoryService.GetCategory(model.CategoryId)
+            };
+
+            _productService.ProductSave(newProduct);
 
             return RedirectToAction("ProductTable");
         }
