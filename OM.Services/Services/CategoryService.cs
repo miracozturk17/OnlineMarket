@@ -12,6 +12,7 @@ namespace OM.Services.Services
 
         protected CategoryService(OMContext context)
         {
+            //Dogrudan _context kullanılmalı (using() tekrarı gereksiz.) 
             _context = context;
         }
 
@@ -38,6 +39,17 @@ namespace OM.Services.Services
             using (var context = new OMContext())
             {
                 return context.Categories.Find(id);
+            }
+        }
+
+        public List<Category> GetFeaturedCategory()
+        {
+            using (var context = new OMContext())
+            {
+                // x=> x.IsFeatured Default true 
+                // x=> !x.IsFeatured false
+                return context.Categories.Where(x => x.IsFeatured && x.ImageUrl != null)
+                    .OrderByDescending(x=>x.Id).ToList();
             }
         }
 

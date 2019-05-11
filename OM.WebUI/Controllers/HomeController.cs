@@ -16,7 +16,7 @@ namespace OM.WebUI.Controllers
         public ActionResult Index()
         {
             HomeViewModel model = new HomeViewModel
-            { Categories = _categoryService.CategoryList() };
+            { FeaturedCategories = _categoryService.CategoryList() };
 
             return View(model);
         } 

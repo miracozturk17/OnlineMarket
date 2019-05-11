@@ -2,22 +2,31 @@
 
 @{
     ViewBag.Title = "Düzenle";
+
+    var trueChecked = Model.IsFeatured ? "checked" : string.Empty;
+    var falseChecked = !Model.IsFeatured ? "checked" : string.Empty;
 }
 
 <h2>Kategori Düzenle</h2>
 
 <form method="post">
-    
-    <input type="hidden" value="@Model.Id"/>
+
+    <input type="hidden" value="@Model.Id" />
 
     <label>Adı :</label>
-    <input name="Adı" value="@Model.Name"/>
+    <input name="Adı" value="@Model.Name" />
 
-    <br/>
+    <br />
 
     <label>Açıklama :</label>
-    <input name="Açıklama" value="@Model.Description"/>
+    <input name="Açıklama" value="@Model.Description" />
 
-    <br/>
+    <br />
+
+    <label>Öne Çıkan mı ? :</label>
+    <input name="IsFeatured" type="radio" value="True" @trueChecked/>Evet
+    <input name="IsFeatured" type="radio" value="False" @falseChecked/>Hayır
+
+    <br />
     <button type="submit">Kaydet</button>
 </form>
