@@ -120,4 +120,23 @@
                 });
         }
     });
+
+    var products = [];
+    $("#addToCard").click(function () {
+
+        var productId = $(this).attr('data-id');
+
+        products.push(productId);
+
+        //Cookie içerisinde ki öğeleri '-' ile ayırdık
+        $.cookie('CartProducts', products.join('-'), { path: '/' });
+
+        alert("Ürün Sepete Eklendi");
+    });
+
+    function focusAction() {
+        $('html,body').animate({
+            scrollTop: $("#actionContainer").offset().top - 100
+        }, 1000);
+    }
 </script>

@@ -42,7 +42,15 @@ namespace OM.Services.Services
         {
             using (var context = new OMContext())
             {
-                return context.Products.Find(id);
+                return context.Products.Where(x=> x.Id==id).Include(x=>x.Category).FirstOrDefault();
+            }
+        }
+
+        public List<Product> GetProducts(List<int> ids)
+        {
+            using (var context = new OMContext())
+            {
+                return context.Products.Where(product => ids.Contains(product.Id)).ToList();
             }
         }
 

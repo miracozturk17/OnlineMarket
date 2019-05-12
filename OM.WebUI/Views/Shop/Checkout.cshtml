@@ -1,0 +1,33 @@
+﻿@model OM.WebUI.Models.ShopViewModel
+
+@{
+    decimal toplamUcret = 0;
+}
+
+@if (Model != null)
+{
+    if (Model.CartProducts != null && Model.CartProducts.Count > 0)
+    {
+        <div>
+            @foreach (var product in Model.CartProducts)
+            {
+                var productQuantity = Model.CartProductIDs.Count(productId => productId == product.Id);
+
+                /*toplamUcret = toplamUcret + (productQuantity * product.UnitePrice);*/
+
+                <div>
+                    Ürün Adı :  @product.Name - Ücreti : @product.UnitePrice - Miktarı : @productQuantity - Toplam Ücreti : @( product.UnitePrice * productQuantity)
+                </div>
+            }
+        </div>
+        <div>
+            Toplam Ücret : @Model.CartProducts.Sum(x => x.UnitePrice * Model.CartProductIDs.Count(productId => productId == x.Id))
+        </div>
+    }
+    else
+    {
+        <div>
+            Sepette ürün bulunmamkta.
+        </div>
+    }
+}
