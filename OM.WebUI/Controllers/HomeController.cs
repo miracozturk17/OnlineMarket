@@ -13,6 +13,11 @@ namespace OM.WebUI.Controllers
             _categoryService = categoryService;
         }
 
+        public HomeController()
+        {
+            
+        }
+
         public ActionResult Index()
         {
             HomeViewModel model = new HomeViewModel

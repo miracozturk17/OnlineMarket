@@ -61,6 +61,10 @@
     <Compile Include="Migrations\201905111142444_FeaturedClassAdd.Designer.cs">
       <DependentUpon>201905111142444_FeaturedClassAdd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905121436373_ConfigrationTable.cs" />
+    <Compile Include="Migrations\201905121436373_ConfigrationTable.Designer.cs">
+      <DependentUpon>201905121436373_ConfigrationTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -83,6 +87,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905111142444_FeaturedClassAdd.resx">
       <DependentUpon>201905111142444_FeaturedClassAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905121436373_ConfigrationTable.resx">
+      <DependentUpon>201905121436373_ConfigrationTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -14,5 +14,7 @@ namespace OM.Database.Context
         public DbSet<Product> Products { get; set; }
 
         public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Configration> Configrations{ get; set; }
     }
 }
