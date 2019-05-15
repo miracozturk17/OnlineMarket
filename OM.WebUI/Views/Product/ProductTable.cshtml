@@ -1,5 +1,5 @@
 ﻿@using OM.Entities.EntityClass
-@model  List<Product>
+@model  OM.WebUI.Models.ProductSearchViewModel
 @{
     ViewBag.Title = "ProductTable";
 }
@@ -25,7 +25,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var urun in Model)
+            @foreach (var urun in Model.Products)
             {
                 <tr>
                     <td>@urun.Name</td>
@@ -47,11 +47,20 @@
                     <td>
                         <button class="btn-info" id="editButton" data-id="@urun.Id">Düzenle</button>
                         <button class="btn-danger" id="deleteButton" data-id="@urun.Id">Sil</button>
+                        <button class="btn-group" id="addToCart" data-id="@urun.Id">Sepete Ekle</button>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    <div>
+        @if (Model.PageNo != 1)
+        {
+            <button id="previousRecord" data-pageNo="@(Model.PageNo - 1)">Önceki</button>
+        }
+
+        <button id="nextRecord" data-pageNo="@(Model.PageNo - 1)">Sonraki</button>
+    </div>
 </div>
 
 <script>
@@ -66,6 +75,35 @@
         })
             .done(function (response) {
                 $("#table").html(response);
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
+            });
+    });
+
+    $("#previousRecord").click(function () {
+
+        $.ajax({
+            url: '/Product/ProductTable',
+            data: $(this).attr("data-pageNo")
+        })
+            .done(function (response) {
+                $("#actionTable").html(response);
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
+            });
+    });
+
+    $("#nextRecord").click(function () {
+        var search = $("#searchText").val();
+
+        $.ajax({
+                url: '/Product/ProductTable',
+                data: $(this).attr("data-pageNo")
+            })
+            .done(function (response) {
+                $("#actionTable").html(response);
             })
             .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);

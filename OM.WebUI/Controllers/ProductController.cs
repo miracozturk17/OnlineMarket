@@ -10,12 +10,13 @@ namespace OM.WebUI.Controllers
     {
         private readonly ProductService _productService;
         private readonly CategoryService _categoryService;
+        private ProductSearchViewModel _model;
 
-
-        public ProductController(ProductService productService, CategoryService categoryService)
+        public ProductController(ProductService productService, CategoryService categoryService, ProductSearchViewModel productSearchViewModel, ProductSearchViewModel model)
         {
             _productService = productService;
             _categoryService = categoryService;
+            _model = model;
         }
 
         public ActionResult Index()
@@ -23,16 +24,19 @@ namespace OM.WebUI.Controllers
             return View();
         }
 
-        public ActionResult ProductTable(string searchtextcontroller)
+        public ActionResult ProductTable(string searchtextcontroller, int? pageNo)
         {
-            var products = _productService.ProductList();
+            _model.PageNo = pageNo.HasValue ? pageNo.Value >0 ? pageNo.Value :1 : 1;
+
+            var products = _productService.ProductList(_model.PageNo);
 
             if (string.IsNullOrEmpty(searchtextcontroller) == false)
             {
-                products = products.Where(p => p.Name != null && p.Name.ToLower().Contains(searchtextcontroller.ToLower())).ToList();
+                _model.Searchterm = searchtextcontroller;
+                _model.Products = products.Where(p => p.Name != null && p.Name.ToLower().Contains(searchtextcontroller.ToLower())).ToList();
             }
 
-            return PartialView(products);
+            return PartialView(_model);
         }
 
         [HttpGet]

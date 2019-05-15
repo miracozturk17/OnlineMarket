@@ -33,16 +33,19 @@ namespace OM.Services.Services
             }
         }
 
-        public List<Product> ProductList()
+        public List<Product> ProductList(int pageNo)
         {
-            return _context.Products.Include(c => c.Category).ToList();
+            int pageSize = 10;
+
+            return _context.Products.OrderBy(x => x.Id).Skip((pageNo - 1) * pageSize).
+                Take(pageSize).Include(c => c.Category).ToList();
         }
 
         public Product GetProduct(int id)
         {
             using (var context = new OMContext())
             {
-                return context.Products.Where(x=> x.Id==id).Include(x=>x.Category).FirstOrDefault();
+                return context.Products.Where(x => x.Id == id).Include(x => x.Category).FirstOrDefault();
             }
         }
 
