@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using OM.Database.Context;
 using OM.Entities.EntityClass;
@@ -18,63 +19,77 @@ namespace OM.Services.Services
 
         public void CategorySave(Category category)
         {
-            using (var context = new OMContext())
-            {
-                context.Categories.Add(category);
+            _context.Categories.Add(category);
 
-                context.SaveChanges();
-            }
+            _context.SaveChanges();
         }
 
         public List<Category> CategoryList()
         {
-            using (var context = new OMContext())
-            {
-                return context.Categories.ToList();
-            }
+            return _context.Categories.ToList();
         }
 
         public Category GetCategory(int id)
         {
-            using (var context = new OMContext())
-            {
-                return context.Categories.Find(id);
-            }
+            return _context.Categories.Find(id);
         }
 
         public List<Category> GetFeaturedCategory()
         {
-            using (var context = new OMContext())
-            {
-                // x=> x.IsFeatured Default true 
-                // x=> !x.IsFeatured false
-                return context.Categories.Where(x => x.IsFeatured && x.ImageUrl != null)
-                    .OrderByDescending(x=>x.Id).ToList();
-            }
+            // x=> x.IsFeatured Default true 
+            // x=> !x.IsFeatured false
+            return _context.Categories.Where(x => x.IsFeatured && x.ImageUrl != null)
+                .OrderByDescending(x => x.Id).ToList();
         }
 
         public void UpdateCategory(Category category)
         {
-            using (var context = new OMContext())
-            {
-                //context.Categories.AddOrUpdate(category);
+            //context.Categories.AddOrUpdate(category);
 
-                context.Entry(category).State = System.Data.Entity.EntityState.Modified;
+            _context.Entry(category).State = System.Data.Entity.EntityState.Modified;
 
-                context.SaveChanges();
-            }
+            _context.SaveChanges();
         }
 
         public void DeleteCategory(int id)
         {
-            using (var context = new OMContext())
+            var category = _context.Categories.Find(id);
+
+            _context.Categories.Remove(category ?? throw new InvalidOperationException());
+
+            _context.SaveChanges();
+        }
+
+        public int GetCategoriesCount(string search)
+        {
+            if (!string.IsNullOrEmpty(search))
             {
-                var category = context.Categories.Find(id);
-
-                context.Categories.Remove(category ?? throw new InvalidOperationException());
-
-                context.SaveChanges();
+                return _context.Categories.Count(category => category.Name != null &&
+                                                             category.Name.ToLower().Contains(search.ToLower()));
             }
+            return _context.Categories.Count();
+        }
+
+        public List<Category> GetCategories(string search, int pageNo)
+        {
+            int pageSize = 3;
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                return _context.Categories.Where(category => category.Name != null &&
+                                                            category.Name.ToLower().Contains(search.ToLower()))
+                    .OrderBy(x => x.Id)
+                    .Skip((pageNo - 1) * pageSize)
+                    .Take(pageSize)
+                    .Include(x => x.Products)
+                    .ToList();
+            }
+            return _context.Categories
+                .OrderBy(x => x.Id)
+                .Skip((pageNo - 1) * pageSize)
+                .Take(pageSize)
+                .Include(x => x.Products)
+                .ToList();
         }
     }
 }

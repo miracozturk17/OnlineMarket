@@ -12,9 +12,23 @@ namespace OM.Services.Services
             _context = context;
         }
 
-        public Configration GetConfigration(string key)
+        public Configration GetConfig(string Key)
         {
-            return _context.Configrations.Find(key);
+            return _context.Configrations.Find(Key);
+        }
+
+        public int PageSize()
+        {
+            var pageSizeConfig = _context.Configrations.Find("PageSize");
+
+            return pageSizeConfig != null ? int.Parse(pageSizeConfig.Value) : 5;
+        }
+
+        public int ShopPageSize()
+        {
+            var pageSizeConfig = _context.Configrations.Find("ShopPageSize");
+
+            return pageSizeConfig != null ? int.Parse(pageSizeConfig.Value) : 6;
         }
     }
 }

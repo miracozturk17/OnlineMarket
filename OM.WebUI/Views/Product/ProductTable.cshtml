@@ -1,180 +1,231 @@
-﻿@using OM.Entities.EntityClass
-@model  OM.WebUI.Models.ProductSearchViewModel
+﻿@model OM.WebUI.Models.ProductSearchViewModel
 @{
     ViewBag.Title = "ProductTable";
 }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 
 <div>
-    <form method="post" action="/Product/ProductTable">
-        <input name="Arama" id="searchText" />
-        <button name="Ara" type="button" id="searchButton">Ara</button>
+    <form method="post">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label>Ara</label>
+                    <input class="form-control" id="searchText" name="Search" value="@Model.SearchTerm" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Eylem</label>
+                    <div class="row">
+                        <div class="col-md-4 pr-0">
+                            <button class="btn btn-primary form-control" type="button" id="searchBtn">Ara</button>
+                        </div>
+                        <div class="col-md-4 pr-0">
+                            <button class="btn btn-primary form-control" type="button" id="resetBtn">Yenile</button>
+                        </div>
+                        <div class="col-md-4 pr-0">
+                            <button class="btn btn-primary form-control" type="button" id="newBtn">Yeni</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
-    <button name="Yeni" type="button" id="newButton">Yeni</button>
 </div>
-
-<h2>Ürün Tablosu</h2>
-<div id="table">
-    <table>
+<div>
+    <table id="ProductsTable" class="table table-striped">
         <thead>
             <tr>
-                <td>Ürün Adı</td>
-                <td>Kategori</td>
-                <td>Fiyat</td>
-                <td>Açıklama</td>
-                <td>Eylem</td>
+                <th class="font-weight-bold">Ürün Adı</th>
+                <th class="font-weight-bold">Kategori</th>
+                <th class="font-weight-bold">Tutar</th>
+                <th class="font-weight-bold wrap-td">Eylem</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var urun in Model.Products)
+            @if (Model.Products != null && Model.Products.Count > 0)
             {
-                <tr>
-                    <td>@urun.Name</td>
-                    <td>
-                        @urun.Category.Name
-                        @{
-                            if (urun.Category != null)
+
+                foreach (var product in Model.Products)
+                {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>
+                            @if (product.Category != null)
                             {
-                                <text> urun.Category.Name </text>
+                                <text>@product.Category.Name</text>
                             }
                             else
                             {
-                                <text> - </text>
+                                <text>-</text>
                             }
-                        }
-                    </td>
-                    <td>@urun.UnitePrice</td>
-                    <td>@urun.Description</td>
-                    <td>
-                        <button class="btn-info" id="editButton" data-id="@urun.Id">Düzenle</button>
-                        <button class="btn-danger" id="deleteButton" data-id="@urun.Id">Sil</button>
-                        <button class="btn-group" id="addToCart" data-id="@urun.Id">Sepete Ekle</button>
-                    </td>
+                        </td>
+                        <td>@product.UnitePrice</td>
+                        <td class="wrap-td">
+                            <button class="editBtn" data-id="@product.Id">Düzenle</button>
+                            <button class="deleteBtn" data-id="@product.Id">Sil</button>
+                            <button class="addtoCart" data-id="@product.Id">Sepete ekle</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td class="text-danger" colspan="4">Ürün bulunamadı.</td>
                 </tr>
             }
         </tbody>
     </table>
     <div>
-        @if (Model.PageNo != 1)
+        @if (Model.Pager != null && Model.Pager.TotalPages > 1)
         {
-            <button id="previousRecord" data-pageNo="@(Model.PageNo - 1)">Önceki</button>
-        }
 
-        <button id="nextRecord" data-pageNo="@(Model.PageNo - 1)">Sonraki</button>
+            if (Model.Pager.CurrentPage > 1)
+            {
+                <button class="pageButtons" data-pageno="1">İlk</button>
+                <button class="pageButtons" data-pageno="@(Model.Pager.CurrentPage - 1)">Öncekiler</button>
+            }
+
+            for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
+            {
+                string activeClass = Model.Pager.CurrentPage == page ? "active bg-info" : string.Empty;
+
+                <button class="@activeClass pageButtons" data-pageno="@page">@page</button>
+            }
+
+            if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
+            {
+                <button class="pageButtons" data-pageno="@(Model.Pager.CurrentPage + 1)">İleri</button>
+                <button class="pageButtons" data-pageno="@Model.Pager.EndPage">Önceki</button>
+            }
+        }
     </div>
 </div>
-
 <script>
-    $("#searchButton").click(function () {
-        var search = $("#searchText").val();
 
-        $.ajax({
-            url: '/Product/ProductTable',
-            data: {
-                searchtextcontroller: search
-            }
+	$(".pageButtons").click(function () {
+		$.ajax({
+			url: '@Url.Action("ProductTable", "Product")',
+			data: {
+				pageNo : $(this).attr("data-pageno")
+			}
+		})
+        .done(function (response) {
+        	$("#tableContiner").html(response);
         })
-            .done(function (response) {
-                $("#table").html(response);
-            })
-            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
-            });
-    });
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("Hata");
+        });
+	});
 
-    $("#previousRecord").click(function () {
+	$("#searchButton").click(function () {
+		var searchValue = $("#searchText").val();
 
-        $.ajax({
-            url: '/Product/ProductTable',
-            data: $(this).attr("data-pageNo")
+		$.ajax({
+			url: '@Url.Action("ProductTable", "Product")',
+			data: {
+				search: searchValue
+			}
+		})
+        .done(function (response) {
+        	$("#tableContainer").html(response);
         })
-            .done(function (response) {
-                $("#actionTable").html(response);
-            })
-            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
-            });
-    });
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+        	alert("Hata");
+        });
+	});
 
-    $("#nextRecord").click(function () {
-        var search = $("#searchText").val();
+	$("#resetButton").click(function () {
+		var searchValue = '';
 
-        $.ajax({
-                url: '/Product/ProductTable',
-                data: $(this).attr("data-pageNo")
-            })
-            .done(function (response) {
-                $("#actionTable").html(response);
-            })
-            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
-            });
-    });
-
-    $("#newButton").click(function () {
-        $.ajax({
-            url: '/Product/Create'
+		$.ajax({
+			url: '@Url.Action("ProductTable", "Product")',
+			data: {
+				search: searchValue
+			}
+		})
+        .done(function (response) {
+        	$("#tableContainer").html(response);
         })
-            .done(function (response) {
-                $("#actionTable").html(response);
-            })
-            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
-            });
-    });
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("Hata");
+        });
+	});
 
-    $("#editButton").click(function () {
-        // debugger; JavaScript Debug
-        $.ajax({
-            url: '/Product/Edit',
-            data: {
-                Id: $(this).attr('data-id')
-            }
+	$("#newButton").click(function () {
+		$.ajax({
+			url: '@Url.Action("Create", "Product")',
+		})
+        .done(function (response) {
+        	$("#actionContainer").html(response);
+
+        	focusAction("actionContainer");
         })
-            .done(function (response) {
-                $("#actionTable").html(response);
-            })
-            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
-            });
-    });
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+        	alert("Hata");
+        });
+	});
 
-    $("#deleteButton").click(function () {
+	$(".editButton").click(function () {
+		$.ajax({
+			url: '@Url.Action("Edit", "Product")',
+			data: {
+				ID: $(this).attr('data-id')
+			}
+		})
+        .done(function (response) {
+        	$("#actionContainer").html(response);
 
-        var confirmDelete = confirm("Ürünü silmek istediğinize emin misiniz ?");
+        	focusAction("actionContainer");
+        })
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+        	alert("Hata");
+        });
+	});
 
-        if (confirmDelete) {
-            $.ajax({
-                type: 'POST',
-                url: '/Product/Delete',
-                data: {
-                    Id: $(this).attr('data-id')
-                }
-            })
-                .done(function (response) {
-                    $("#table").html(response);
-                })
-                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert("Durum: " + textStatus + '/n' + "Hata: " + errorThrown);
-                });
-        }
-    });
+	$(".deleteButton").click(function () {
 
-    var products = [];
-    $("#addToCard").click(function () {
+		swal({
+			title: "Confirm?",
+			text: "Bu ürünü silmek istediginize emin misiniz?",
+			icon: "warning",
+			buttons: true,
+			dangerMode: true,
+		})
+		.then((willDelete) => {
+			if (willDelete) {
+				$.ajax({
+					type: 'POST',
+					url: '@Url.Action("Delete", "Product")',
+					data: {
+						ID: $(this).attr('data-id')
+					}
+				})
+				.done(function (response) {
+					$("#tableContainer").html(response);
 
-        var productId = $(this).attr('data-id');
+					swal("Kayıt basari ile silindi.", {
+						icon: "success",
+					});
+				})
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					alert("Hata");
+				});
 
-        products.push(productId);
+			}
+		});
+	});
 
-        //Cookie içerisinde ki öğeleri '-' ile ayırdık
-        $.cookie('CartProducts', products.join('-'), { path: '/' });
+	var products = [];
+	$(".addtoCart").click(function () {
+		var productId = $(this).attr('data-id');
 
-        alert("Ürün Sepete Eklendi");
-    });
+		products.push(productId);
 
-    function focusAction() {
-        $('html,body').animate({
-            scrollTop: $("#actionContainer").offset().top - 100
-        }, 1000);
-    }
+		$.cookie('CartProducts', products.join('-'), { path: '/' });
+
+		alert("Ürün sepete eklendi.");
+	});
 </script>

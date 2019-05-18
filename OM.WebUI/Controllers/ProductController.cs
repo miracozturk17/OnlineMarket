@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using OM.Entities.EntityClass;
 using OM.Services.Services;
 using OM.WebUI.Models;
@@ -10,12 +9,21 @@ namespace OM.WebUI.Controllers
     {
         private readonly ProductService _productService;
         private readonly CategoryService _categoryService;
+        private readonly ConfigrationService _configrationService;
         private ProductSearchViewModel _model;
+        private NewProductViewModel _newModel;
+        private EditProductViewModel _editModel;
 
-        public ProductController(ProductService productService, CategoryService categoryService, ProductSearchViewModel productSearchViewModel, ProductSearchViewModel model)
+        public ProductController(ProductService productService, ConfigrationService configrationService,
+            CategoryService categoryService, ProductSearchViewModel productSearchViewModel,
+            ProductSearchViewModel model, NewProductViewModel newModel,
+            EditProductViewModel editModel)
         {
             _productService = productService;
             _categoryService = categoryService;
+            _configrationService = configrationService;
+            _newModel = newModel;
+            _editModel = editModel;
             _model = model;
         }
 
@@ -24,44 +32,42 @@ namespace OM.WebUI.Controllers
             return View();
         }
 
-        public ActionResult ProductTable(string searchtextcontroller, int? pageNo)
+        public ActionResult ProductTable(string search, int? pageNo)
         {
-            _model.PageNo = pageNo.HasValue ? pageNo.Value >0 ? pageNo.Value :1 : 1;
+            var pageSize = _configrationService.PageSize();
 
-            var products = _productService.ProductList(_model.PageNo);
+            _model.SearchTerm = search;
 
-            if (string.IsNullOrEmpty(searchtextcontroller) == false)
-            {
-                _model.Searchterm = searchtextcontroller;
-                _model.Products = products.Where(p => p.Name != null && p.Name.ToLower().Contains(searchtextcontroller.ToLower())).ToList();
-            }
+            pageNo = pageNo.HasValue ? pageNo.Value > 0 ? pageNo.Value : 1 : 1;
+
+            var totalRecords = _productService.GetProductsCount(search);
+
+            _model.Products = _productService.GetProducts(search, pageNo.Value, pageSize);
+
+            _model.Pager = new BaseListingViewmodel(totalRecords, pageNo, pageSize);
 
             return PartialView(_model);
         }
 
+
         [HttpGet]
         public ActionResult Create()
         {
-            var categories = _categoryService.CategoryList();
+            _newModel.AvailableCategories = _categoryService.CategoryList();
 
-            return PartialView(categories);
+            return PartialView(_newModel);
         }
 
         [HttpPost]
-        public ActionResult Create(CategoryViewModel model)
+        public ActionResult Create(NewProductViewModel model)
         {
-            /*
-             Service üzerinden de hareket edilebilir.
-            _productService.ProductSave(product); 
-            */
-
             var newProduct = new Product
             {
                 Name = model.Name,
                 Description = model.Description,
                 UnitePrice = model.Price,
-                //CategoryId = model.CategoryId
-                Category = _categoryService.GetCategory(model.CategoryId)
+                Category = _categoryService.GetCategory(model.CategoryId),
+                ImageUrl = model.ImageUrl
             };
 
             _productService.ProductSave(newProduct);
@@ -69,23 +75,42 @@ namespace OM.WebUI.Controllers
             return RedirectToAction("ProductTable");
         }
 
-
         [HttpGet]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int Id)
         {
-            var product = _productService.GetProduct(id);
+            var product = _productService.GetProduct(Id);
 
-            return PartialView(product);
+            _editModel.Id= product.Id;
+            _editModel.Name = product.Name;
+            _editModel.Description = product.Description;
+            _editModel.Price = product.UnitePrice;
+            _editModel.CategoryId = product.Category?.Id ?? 0;
+            _editModel.ImageUrl = product.ImageUrl;
+
+            _editModel.AvailableCategories = _categoryService.CategoryList();
+
+            return PartialView(_editModel);
         }
 
         [HttpPost]
-        public ActionResult Edit(Product product)
+        public ActionResult Edit(EditProductViewModel model)
         {
-            _productService.UpdateProduct(product);
+            var existingProduct = _productService.GetProduct(model.Id);
+            existingProduct.Name = model.Name;
+            existingProduct.Description = model.Description;
+            existingProduct.UnitePrice = model.Price;
+            existingProduct.Category = null; 
+            existingProduct.CategoryId = model.CategoryId;
+
+            if (!string.IsNullOrEmpty(model.ImageUrl))
+            {
+                existingProduct.ImageUrl = model.ImageUrl;
+            }
+
+            _productService.UpdateProduct(existingProduct);
 
             return RedirectToAction("ProductTable");
         }
-
 
         [HttpPost]
         public ActionResult Delete(int id)
@@ -93,6 +118,18 @@ namespace OM.WebUI.Controllers
             _productService.DeleteProduct(id);
 
             return RedirectToAction("ProductTable");
+        }
+
+        [HttpGet]
+        public ActionResult Details(int ID)
+        {
+            ProductViewModel model = new ProductViewModel();
+
+            model.Product = _productService.GetProduct(ID);
+
+            if (model.Product == null) return HttpNotFound();
+
+            return View(model);
         }
     }
 }

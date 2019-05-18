@@ -1,16 +1,20 @@
 ﻿using System.Web.Mvc;
 using OM.Entities.EntityClass;
 using OM.Services.Services;
+using OM.WebUI.Models;
 
 namespace OM.WebUI.Controllers
 {
     public class CategoryController : Controller
     {
         private readonly CategoryService _categoryService;
+        private readonly CategoryViewModel _model = new CategoryViewModel();
+        private readonly NewCategoryViewModel _newModel = new NewCategoryViewModel();
+        private readonly EditCategoryViewModel _editModel = new EditCategoryViewModel();
 
         public CategoryController()
         {
-                
+
         }
 
         public CategoryController(CategoryService categoryService)
@@ -28,36 +32,61 @@ namespace OM.WebUI.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            return View();
+            return View(_newModel);
         }
 
         [HttpPost]
-        public ActionResult Create(Category category)
+        public ActionResult Create(NewCategoryViewModel model)
         {
-            _categoryService.CategorySave(category);
+            if (ModelState.IsValid)
+            {
+                var newCategory = new Category();
+                newCategory.Name = model.Name;
+                newCategory.Description = model.Description;
+                newCategory.ImageUrl = model.ImageUrl;
+                newCategory.IsFeatured = model.IsFeatured;
 
-            return RedirectToAction("Index");
+                _categoryService.CategorySave(newCategory);
+
+                return RedirectToAction("CategoryTable");
+            }
+            return new HttpStatusCodeResult(500);
         }
 
         [HttpGet]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int Id)
         {
-            var category = _categoryService.GetCategory(id);
-            return View(category);
+            var category = _categoryService.GetCategory(Id);
+
+            _editModel.Id = category.Id;
+            _editModel.Name = category.Name;
+            _editModel.Description = category.Description;
+            _editModel.ImageUrl = category.ImageUrl;
+            _editModel.IsFeatured = category.IsFeatured;
+
+            return PartialView(_editModel);
         }
 
         [HttpPost]
-        public ActionResult Edit(Category category)
+        public ActionResult Edit(EditCategoryViewModel model)
         {
-            _categoryService.UpdateCategory(category);
+            var existingCategory = _categoryService.GetCategory(model.Id);
 
-            return RedirectToAction("Index");
+            existingCategory.Name = model.Name;
+            existingCategory.Description = model.Description;
+            existingCategory.ImageUrl = model.ImageUrl;
+            existingCategory.IsFeatured = model.IsFeatured;
+
+            _categoryService.UpdateCategory(existingCategory);
+
+            return RedirectToAction("CategoryTable");
         }
 
         [HttpGet]
         public ActionResult Delete(int id)
         {
             var category = _categoryService.GetCategory(id);
+
             return View(category);
         }
 
@@ -67,6 +96,24 @@ namespace OM.WebUI.Controllers
             _categoryService.DeleteCategory(category.Id);
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult CategoryTable(string search, int? pageNo)
+        {
+            _model.SearchTerm = search;
+
+            pageNo = pageNo.HasValue ? pageNo.Value > 0 ? pageNo.Value : 1 : 1;
+
+            var totalRecords = _categoryService.GetCategoriesCount(search);
+            _model.Categories = _categoryService.GetCategories(search, pageNo.Value);
+
+            if (_model.Categories != null)
+            {
+                _model.Pager = new BaseListingViewmodel(totalRecords, pageNo, 3);
+
+                return PartialView("CategoryTable", _model);
+            }
+            return HttpNotFound();
         }
     }
 }

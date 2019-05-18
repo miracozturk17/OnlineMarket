@@ -1,0 +1,190 @@
+﻿@model  OM.WebUI.Models.CategoryViewModel
+<div>
+    <form method="post">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label>Search</label>
+                    <input class="form-control" id="searchText" name="Search" value="@Model.SearchTerm" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Action</label>
+                    <div class="row">
+                        <div class="col-md-4 pr-0">
+                            <button class="btn btn-primary form-control" type="button" id="searchButton">Ara</button>
+                        </div>
+                        <div class="col-md-4 pr-0">
+                            <button class="btn btn-primary form-control" type="button" id="resetButton">Yenile</button>
+                        </div>
+                        <div class="col-md-4 pr-0">
+                            <button class="btn btn-primary form-control" type="button" id="newButton">Yeni</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="font-weight-bold">Kategori Adı</th>
+                <th class="font-weight-bold">Ürünler</th>
+                <th class="font-weight-bold wrap-td">Eylem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Categories != null && Model.Categories.Count > 0)
+            {
+                foreach (var category in Model.Categories)
+                {
+                    <tr>
+                        <td>@category.Name</td>
+                        <td>
+                            @category.Products.Count
+                        </td>
+                        <td class="wrap-td">
+                            <button class="editButton" data-id="@category.Id">Düzenle</button>
+                            <button class="deleteButton" data-id="@category.Id">Sil</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="3" class="text-danger">Kategori bulunamadı.</td></tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        @if (Model.Pager != null && Model.Pager.TotalPages > 1)
+        {
+
+            if (Model.Pager.CurrentPage > 1)
+            {
+                <button class="pageButtons" data-pageno="1">İlk</button>
+                <button class="pageButtons" data-pageno="@(Model.Pager.CurrentPage - 1)">Öncekiler</button>
+            }
+
+            for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
+            {
+                string activeClass = Model.Pager.CurrentPage == page ? "active bg-info" : string.Empty;
+
+                <button class="@activeClass pageButtons" data-pageno="@page">@page</button>
+            }
+
+            if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
+            {
+                <button class="pageButtons" data-pageno="@(Model.Pager.CurrentPage + 1)">İleri</button>
+                <button class="pageButtons" data-pageno="@Model.Pager.EndPage">Önceki</button>
+            }
+        }
+    </div>
+</div>
+<script>
+    $(".pageButtons").click(function () {
+        $.ajax({
+                url: '@Url.Action("CategoryTable", "Category")',
+                data: {
+                    pageNo: $(this).attr("data-pageNo"),
+                    search: '@Model.SearchTerm'
+                }
+            })
+            .done(function (response) {
+                $("#tableContainer").html(response);
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("FAIL");
+            });
+    });
+
+    $("#searchButton").click(function () {
+        var searchValue = $("#searchText").val();
+
+        $.ajax({
+                url: '@Url.Action("CategoryTable", "Category")',
+                data: {
+                    search: searchValue
+                }
+            })
+            .done(function (response) {
+                $("#tableContainer").html(response);
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("FAIL");
+            });
+    });
+
+    $("#resetButton").click(function () {
+        var searchValue = '';
+
+        $.ajax({
+                url: '@Url.Action("CategoryTable", "Category")',
+                data: {
+                    search: searchValue
+                }
+            })
+            .done(function (response) {
+                $("#tableContainer").html(response);
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("FAIL");
+            });
+    });
+
+    $("#newButton").click(function () {
+        $.ajax({
+                url: '@Url.Action("Create", "Category")',
+            })
+            .done(function (response) {
+                $("#actionContainer").html(response);
+
+                focusAction("actionContainer");
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("FAIL");
+            });
+    });
+
+    $(".editButton").click(function () {
+        $.ajax({
+                url: '@Url.Action("Edit", "Category")',
+                data: {
+                    ID: $(this).attr('data-id')
+                }
+            })
+            .done(function (response) {
+                $("#actionContainer").html(response);
+
+                focusAction("actionContainer");
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("FAIL");
+            });
+    });
+
+    $(".deleteButton").click(function () {
+
+        var confirmDelete = confirm("Bu kategoriyi silmek istediğinize emin misiniz?");
+
+        if (confirmDelete)
+        {
+            $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Delete", "Category")',
+                    data: {
+                        ID: $(this).attr('data-id')
+                    }
+                })
+                .done(function (response) {
+                    $("#tableContainer").html(response);
+                })
+                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("FAIL");
+                });
+        }
+    });
+</script>
