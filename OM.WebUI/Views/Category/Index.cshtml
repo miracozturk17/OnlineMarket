@@ -1,14 +1,40 @@
-﻿@model List<OM.Entities.EntityClass.Category>
+﻿@model  List<OM.Entities.EntityClass.Category>
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Kategoriler</h2>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 
-@foreach (var category in Model)
-{
-    <h1>@category.Name</h1>
-    <h3>@category.Description</h3>
-    <br />
-}
+<section class="flat-row flat-iconbox">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="title-section">
+                    <h2 class="title">
+                        Kategoriler
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div id="tableContainer">
+            @{
+                Html.RenderAction("CategoryTable");
+            }
+        </div>
+
+        <hr />
+        <div id="actionContainer">
+
+        </div>
+    </div>
+</section>
+
+<script>
+    function focusAction(controlToFocus) {
+        $('html, body').animate({
+            scrollTop: $("#" + controlToFocus).offset().top - 100
+        }, 1000);
+    }
+</script>

@@ -45,6 +45,8 @@
     <Compile Include="EntityClass\BaseEntity.cs" />
     <Compile Include="EntityClass\Category.cs" />
     <Compile Include="EntityClass\Configration.cs" />
+    <Compile Include="EntityClass\Order.cs" />
+    <Compile Include="EntityClass\OrderItem.cs" />
     <Compile Include="EntityClass\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,20 +1,33 @@
 ﻿
-<div class="container">
-    <div id="table">
-        @{
+<section class="flat-row flat-iconbox">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="title-section">
+                    <h2 class="title">
+                        Ürünler
+                    </h2>
+                </div>
+            </div>
+        </div>
 
-            Html.RenderAction("ProductTable");
+        <div id="tableContainer">
+            @{
+                Html.RenderAction("ProductTable");
+            }
+        </div>
 
-            /*
-            * Html.RenderAction("Create");
-            * Parçalı olarak sayfa düzenini doğrudan oluşturmak için bu yöntem üzerinden ilerleyebiliriz..
-            */
+        <hr />
+        <div id="actionContainer">
 
-        }
+        </div>
     </div>
+</section>
 
-    <div id="actionTable">
-
-    </div>
-
-</div>
+<script>
+    function focusAction(controlToFocus) {
+        $('html, body').animate({
+            scrollTop: $("#" + controlToFocus).offset().top - 100
+        }, 1000);
+    }
+</script>

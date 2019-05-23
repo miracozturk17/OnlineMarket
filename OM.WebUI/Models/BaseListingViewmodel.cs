@@ -4,9 +4,9 @@ namespace OM.WebUI.Models
 {
     public class BaseListingViewmodel
     {
-        public int TotalItems { get; }
+        private int TotalItems { get; }
         public int CurrentPage { get; }
-        public int PageSize { get; }
+        private int PageSize { get; }
         public int TotalPages { get; }
         public int StartPage { get; }
         public int EndPage { get; }

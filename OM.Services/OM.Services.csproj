@@ -52,6 +52,7 @@
     <Compile Include="Services\ConfigrationService.cs" />
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\CategoryService.cs" />
+    <Compile Include="Services\ShopService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OM.Database\OM.Database.csproj">
