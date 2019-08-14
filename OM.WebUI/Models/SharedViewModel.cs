@@ -2,20 +2,18 @@
 
 namespace OM.WebUI.Models
 {
-    public class BaseListingViewmodel
+    public class BaseListingViewModel
     {
-        private int TotalItems { get; }
-        public int CurrentPage { get; }
-        private int PageSize { get; }
-        public int TotalPages { get; }
-        public int StartPage { get; }
-        public int EndPage { get; }
 
-        public BaseListingViewmodel(int totalItems, int? page, int pageSize = 10)
+    }
+
+    public class Pager
+    {
+        public Pager(int totalItems, int? page, int pageSize = 10)
         {
             if (pageSize == 0) pageSize = 10;
 
-            var totalPages = (int)Math.Ceiling(NewMethod(totalItems) / pageSize);
+            var totalPages = (int)Math.Ceiling(totalItems / (decimal)pageSize);
             var currentPage = page ?? 1;
             var startPage = currentPage - 5;
             var endPage = currentPage + 4;
@@ -41,9 +39,11 @@ namespace OM.WebUI.Models
             EndPage = endPage;
         }
 
-        private static decimal NewMethod(int totalItems)
-        {
-            return totalItems;
-        }
+        private int TotalItems { get; }
+        public int CurrentPage { get; }
+        private int PageSize { get; }
+        public int TotalPages { get; }
+        public int StartPage { get; }
+        public int EndPage { get; }
     }
 }

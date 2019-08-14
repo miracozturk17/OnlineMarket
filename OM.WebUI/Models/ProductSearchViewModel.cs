@@ -14,15 +14,24 @@ namespace OM.WebUI.Models
 
     public class NewProductViewModel
     {
-        public string Name { get; set; }
+        public NewProductViewModel(string name, string description, decimal price, int categoryId, string imageUrl)
+        {
+            Name = name;
+            Description = description;
+            Price = price;
+            CategoryId = categoryId;
+            ImageUrl = imageUrl;
+        }
 
-        public string Description { get; set; }
+        public string Name { get; }
 
-        public decimal Price { get; set; }
+        public string Description { get; }
 
-        public int CategoryId { get; set; }
+        public decimal Price { get; }
 
-        public string ImageUrl { get; set; }
+        public int CategoryId { get; }
+
+        public string ImageUrl { get; }
 
         public List<Category> AvailableCategories { get; set; }
     }

@@ -52,8 +52,6 @@
             </div>
         </div><!-- /.container -->
     </section>
-
-
     <script>
 	$("#placeOrderBtn").click(function () {
 		$.ajax({
@@ -66,17 +64,17 @@
         	if(response.Success)
         	{
         		$.cookie('CartProducts', '', { path: '/' });
-        		updateCartProducts();
+        		window.updateCartProducts();
 
-        		swal("Done", "Your Order has been placed.", "success").then((value) => {
+        		window.swal("Done", "Your Order has been placed.", "success").then((value) => {
         			window.location = '@Url.Action("Index", "Shop")';
         		});;
         	}
         	else{
-        		swal("Failed", "Unable to place order.", "warning");
+        		window.swal("Failed", "Unable to place order.", "warning");
         	}
         })
-        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+        .fail(function (xmlHttpRequest, textStatus, errorThrown) {
         	alert("FAIL");
         });
 	});

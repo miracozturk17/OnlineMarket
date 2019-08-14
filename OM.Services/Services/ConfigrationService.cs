@@ -7,14 +7,28 @@ namespace OM.Services.Services
     {
         private readonly OMContext _context;
 
+        /*
         public ConfigrationService(OMContext context)
         {
             _context = context;
         }
+        */
 
-        public Configration GetConfig(string Key)
+        #region CTOR
+        public ConfigrationService()
         {
-            return _context.Configrations.Find(Key);
+
+        }
+        #endregion
+
+        #region SINGLETON PATTERN
+        public static ConfigrationService Instance => InstanceValid ?? (InstanceValid = new ConfigrationService());
+        private static ConfigrationService InstanceValid { get; set; }
+        #endregion
+
+        public Configration GetConfig(string key)
+        {
+            return _context.Configrations.Find(key);
         }
 
         public int PageSize()

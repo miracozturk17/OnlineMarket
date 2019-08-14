@@ -40,11 +40,13 @@ namespace OM.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var newCategory = new Category();
-                newCategory.Name = model.Name;
-                newCategory.Description = model.Description;
-                newCategory.ImageUrl = model.ImageUrl;
-                newCategory.IsFeatured = model.IsFeatured;
+                var newCategory = new Category
+                {
+                    Name = model.Name,
+                    Description = model.Description,
+                    ImageUrl = model.ImageUrl,
+                    IsFeatured = model.IsFeatured
+                };
 
                 _categoryService.CategorySave(newCategory);
 

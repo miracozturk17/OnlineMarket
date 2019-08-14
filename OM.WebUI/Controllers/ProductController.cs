@@ -10,9 +10,9 @@ namespace OM.WebUI.Controllers
         private readonly ProductService _productService;
         private readonly CategoryService _categoryService;
         private readonly ConfigrationService _configrationService;
-        private ProductSearchViewModel _model;
-        private NewProductViewModel _newModel;
-        private EditProductViewModel _editModel;
+        private readonly ProductSearchViewModel _model;
+        private readonly NewProductViewModel _newModel;
+        private readonly EditProductViewModel _editModel;
 
         public ProductController(ProductService productService, ConfigrationService configrationService,
             CategoryService categoryService, ProductSearchViewModel productSearchViewModel,

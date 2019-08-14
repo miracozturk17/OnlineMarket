@@ -50,7 +50,7 @@ namespace OM.WebUI.Controllers
             set => _userManager = value;
         }
 
-        public ActionResult Index(string searchTerm, int? minimumPrice, int? maximumPrice, int? categoryID, int? sortBy, int? pageNo)
+        public ActionResult Index(string searchTerm, int? minimumPrice, int? maximumPrice, int? categoryId, int? sortBy, int? pageNo)
         {
             var pageSize = _configrationService.ShopPageSize();
 
@@ -60,10 +60,10 @@ namespace OM.WebUI.Controllers
 
             pageNo = pageNo.HasValue ? pageNo.Value > 0 ? pageNo.Value : 1 : 1;
             _model.SortBy = sortBy;
-            _model.CategoryId = categoryID;
+            _model.CategoryId = categoryId;
 
-            int totalCount = _productService.SearchProductsCount(searchTerm, minimumPrice, maximumPrice, categoryID, sortBy);
-            _model.Products = _productService.SearchProducts(searchTerm, minimumPrice, maximumPrice, categoryID, sortBy, pageNo.Value, pageSize);
+            int totalCount = _productService.SearchProductsCount(searchTerm, minimumPrice, maximumPrice, categoryId, sortBy);
+            _model.Products = _productService.SearchProducts(searchTerm, minimumPrice, maximumPrice, categoryId, sortBy, pageNo.Value, pageSize);
 
             _model.Pager = new BaseListingViewmodel(totalCount, pageNo, pageSize);
 

@@ -9,9 +9,7 @@ namespace OM.WebUI.Controllers
         public JsonResult UploadImage()
         {
             JsonResult result = GetResult();
-
             result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-
             try
             {
                 var file = Request.Files[0];
